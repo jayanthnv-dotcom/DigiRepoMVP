@@ -40,11 +40,15 @@
   USE.prose = (text) => {
     if (!text) return '';
     return String(text).trim().split(/\n\s*\n/).map((block) => {
-      const lines = block.split('\n');
-      if (lines.every((l) => /^\s*[-•]\s+/.test(l))) {
-        return '<ul>' + lines.map((l) => '<li>' + esc(l.replace(/^\s*[-•]\s+/, '')) + '</li>').join('') + '</ul>';
-      }
-      return '<p>' + lines.map(esc).join('<br>') + '</p>';
+      let html = '', para = [], items = [];
+      const flushP = () => { if (para.length) html += '<p>' + para.map(esc).join('<br>') + '</p>'; para = []; };
+      const flushL = () => { if (items.length) html += '<ul>' + items.map((l) => '<li>' + esc(l) + '</li>').join('') + '</ul>'; items = []; };
+      block.split('\n').forEach((l) => {
+        if (/^\s*[-•]\s+/.test(l)) { flushP(); items.push(l.replace(/^\s*[-•]\s+/, '')); }
+        else { flushL(); para.push(l); }
+      });
+      flushP(); flushL();
+      return html;
     }).join('');
   };
 

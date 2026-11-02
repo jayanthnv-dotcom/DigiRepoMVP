@@ -15,11 +15,12 @@
         <p class="lede">A digital repository of low-cost, Indian-context teaching resources for undergraduate science and mathematics, shared by educators for educators.</p>
         <form class="big-search" role="search" id="hs">
           <input type="search" id="hq" placeholder="Search experiments, activities, worksheets, courses…" aria-label="Search the repository">
-          <select id="ht" aria-label="Resource type">${Object.values(USE.TYPES).map((T) => `<option value="${T.list}">${T.label}</option>`).join('')}</select>
+          <select id="ht" aria-label="Resource type"><option value="all">All resources</option>${Object.values(USE.TYPES).map((T) => `<option value="${T.list}">${T.label}</option>`).join('')}</select>
           <button class="btn btn-primary" type="submit">Search</button>
         </form>
       </div></section>
       <div class="container">
+        <section class="section hidden" id="results" style="margin-top:36px"></section>
         <section class="section" style="margin-top:36px">
           <div class="type-cards">${Object.values(USE.TYPES).map((T) => {
             const n = all.filter((r) => r.type === T.key).length;
@@ -39,7 +40,28 @@
             <a class="btn btn-primary" href="contribute.html">＋ Contribute a resource</a></div>
         </section>
       </div>`;
-    USE.qs('#hs').onsubmit = (e) => { e.preventDefault(); location.href = USE.qs('#ht').value + '?q=' + encodeURIComponent(USE.qs('#hq').value.trim()); };
+    const search = (q) => {
+      const box = USE.qs('#results');
+      const words = q.toLowerCase().split(/\s+/).filter(Boolean);
+      if (!words.length) { box.classList.add('hidden'); return; }
+      const hits = all.filter((r) => {
+        const hay = [r.title, r.overview, r.topic, ...(r.keywords || []), ...(r.disciplines || []), ...USE.contributorNames(r)].join(' ').toLowerCase();
+        return words.every((w) => hay.includes(w));
+      });
+      box.classList.remove('hidden');
+      box.innerHTML = `<div class="list-head" style="margin-bottom:14px"><h2 style="margin:0">${hits.length} result${hits.length === 1 ? '' : 's'} for “${esc(q)}”</h2><button class="btn-link" id="clr">Clear</button></div>
+        ${hits.length ? `<div class="cards">${hits.map((r) => USE.card(r).replace('<div class="tags">', `<div class="tags"><span class="tag" style="background:var(--navy);color:#fff">${esc(USE.TYPES[r.type].single)}</span>`)).join('')}</div>` : '<div class="card empty">No matching resources. Try another word.</div>'}`;
+      USE.qs('#clr').onclick = () => { USE.qs('#hq').value = ''; box.classList.add('hidden'); history.replaceState(null, '', 'index.html'); };
+      USE.hydrateSrc(box);
+      box.scrollIntoView({ behavior: 'smooth' });
+    };
+    USE.qs('#hs').onsubmit = (e) => {
+      e.preventDefault();
+      const q = USE.qs('#hq').value.trim(), t = USE.qs('#ht').value;
+      if (t === 'all') { history.replaceState(null, '', '?q=' + encodeURIComponent(q)); search(q); }
+      else location.href = t + '?q=' + encodeURIComponent(q);
+    };
+    if (USE.param('q')) { USE.qs('#hq').value = USE.param('q'); search(USE.param('q')); }
     USE.qsa('[data-d]', root).forEach((a) => (a.onclick = (e) => {
       e.preventDefault();
       const d = a.dataset.d;

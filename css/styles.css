@@ -305,7 +305,8 @@ textarea.input { min-height: 96px; resize: vertical; }
 /* Guideline blocks */
 .blocks > * + * { margin-top: 16px; }
 .blocks figure { margin: 0; }
-.blocks figure img, .blocks figure iframe, .blocks figure video { border-radius: 10px; width: 100%; }
+.blocks figure img, .blocks figure video { border-radius: 10px; max-width: 100%; max-height: 440px; width: auto; }
+.blocks figure iframe { border-radius: 10px; width: 100%; max-width: 720px; }
 .blocks figure iframe { aspect-ratio: 16 / 9; border: 0; height: auto; }
 .blocks figcaption { font-size: .82rem; color: var(--muted); margin-top: 6px; }
 .blocks .gstep { display: grid; grid-template-columns: 32px 1fr; gap: 12px; }
@@ -455,3 +456,4 @@ body.sharing .site-footer { padding-bottom: 80px; }
 @media print {
   .site-header, .site-footer, .share-bar, .teacher-bar, .student-banner { display: none !important; }
 }
+section[id], .field { scroll-margin-top: 84px; }

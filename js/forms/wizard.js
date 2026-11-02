@@ -140,32 +140,33 @@
       <div class="tabs mode" role="tablist"><button type="button" data-m="upload">Upload file</button><button type="button" data-m="link">Paste link</button>${opts.optional !== false ? '<button type="button" data-m="none">None</button>' : ''}</div>
       <div data-body></div>${opts.hint ? `<div class="hint">${opts.hint}</div>` : ''}</div>`);
     const body = w.querySelector('[data-body]');
-    let mode = o[k] && o[k].src ? (o[k].kind === 'youtube' || o[k].kind === 'link' ? 'link' : 'upload') : (opts.optional !== false ? 'none' : 'upload');
+    const isLink = (v) => v && (v.kind === 'youtube' || v.kind === 'link');
+    const set = (v) => { o[k] = v; if (opts.onSet) opts.onSet(v); fire(); };
+    let mode = o[k] && o[k].src ? (isLink(o[k]) ? 'link' : 'upload') : (opts.optional !== false ? 'none' : 'upload');
     const draw = () => {
       USE.qsa('.mode button', w).forEach((b) => b.setAttribute('aria-selected', String(b.dataset.m === mode)));
       body.innerHTML = '';
       if (mode === 'upload') {
-        const holder = { f: o[k] && o[k].kind !== 'youtube' && o[k].kind !== 'link' ? o[k] : null };
+        const holder = { f: o[k] && o[k].src && !isLink(o[k]) ? o[k] : null };
         body.appendChild(F.file(holder, 'f', { accept: opts.accept || 'video/*,image/*,application/pdf',
-          onSet: (v) => { o[k] = v ? Object.assign({ caption: (o[k] || {}).caption || '' }, v) : null; } }));
+          onSet: (v) => set(v ? Object.assign({}, v, { caption: (o[k] || {}).caption || '' }) : null) }));
       } else if (mode === 'link') {
-        const holder = { u: o[k] && (o[k].kind === 'youtube' || o[k].kind === 'link') ? o[k].src : '' };
+        const holder = { u: isLink(o[k]) ? o[k].src : '' };
         const lw = F.text(holder, 'u', { placeholder: 'https://www.youtube.com/watch?v=…' });
         lw.querySelector('input').addEventListener('input', () => {
           const u = holder.u.trim();
-          o[k] = u ? { kind: USE.youtubeId(u) ? 'youtube' : 'link', src: u, name: '', caption: (o[k] || {}).caption || '' } : null;
-          fire();
+          set(u ? { kind: USE.youtubeId(u) ? 'youtube' : 'link', src: u, name: '', caption: (o[k] || {}).caption || '' } : null);
         });
         body.appendChild(lw);
       }
       if (opts.caption && mode !== 'none') {
         const cap = { c: (o[k] || {}).caption || '' };
         const cw = F.text(cap, 'c', { placeholder: 'Caption (optional)' });
-        cw.querySelector('input').addEventListener('input', () => { if (o[k]) { o[k].caption = cap.c; fire(); } });
+        cw.querySelector('input').addEventListener('input', () => { if (o[k]) set(Object.assign({}, o[k], { caption: cap.c })); });
         body.appendChild(cw);
       }
     };
-    USE.qsa('.mode button', w).forEach((b) => (b.onclick = () => { mode = b.dataset.m; if (mode === 'none') { o[k] = null; fire(); } draw(); }));
+    USE.qsa('.mode button', w).forEach((b) => (b.onclick = () => { mode = b.dataset.m; if (mode === 'none') set(null); draw(); }));
     draw();
     if (opts.required) requireCheck(w, () => o[k] && o[k].src, 'Please add a file or link.');
     return w;
