@@ -35,7 +35,7 @@
           <div class="list-head" style="margin-bottom:14px"><h2 style="margin:0">Recently added</h2></div>
           <div class="cards">${recent.map(USE.card).join('')}</div>
         </section>
-        <section class="section teacher-only">
+        <section class="section">
           <div class="cta-band"><div><h2>Share your practice</h2><p>Have an experiment, activity, worksheet or course that works in your classroom? Share it so others can adapt it.</p></div>
             <a class="btn btn-primary" href="contribute.html">＋ Contribute a resource</a></div>
         </section>

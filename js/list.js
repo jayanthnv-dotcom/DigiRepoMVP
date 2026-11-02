@@ -16,7 +16,7 @@
         <div class="list-head">
           <div><div class="crumbs"><a href="index.html">Home</a> › ${T.label}</div>
             <h1>${T.label}</h1><p class="lede">${USE.esc(cfg.intro || T.blurb)}</p></div>
-          <a class="btn btn-primary teacher-only" href="contribute.html?type=${type}">＋ Contribute Resource</a>
+          <a class="btn btn-primary" href="contribute.html?type=${type}">＋ Contribute Resource</a>
         </div>
       </div></section>
       <div class="container">

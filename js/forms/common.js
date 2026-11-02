@@ -11,8 +11,17 @@
     intro: 'These details appear on the listing card and at the top of the resource page, and power search and filters.',
     render(b, d) {
       const me = USE.store.me();
-      b.appendChild(USE.el(`<div class="field"><div class="label">Contributing as</div><div class="me-card">${USE.avatar(me, 'md')}<div><b>${esc(me.name)}</b><div class="small muted">${esc([me.designation, me.institution].filter(Boolean).join(' · '))}</div></div><a class="btn-link" style="margin-left:auto" href="profile-edit.html" target="_blank">Edit profile</a></div></div>`));
-      USE.hydrateSrc(b);
+      if (me) {
+        b.appendChild(USE.el(`<div class="field"><div class="label">Contributing as</div><div class="me-card">${USE.avatar(me, 'md')}<div><b>${esc(me.name)}</b><div class="small muted">${esc([me.designation, me.institution].filter(Boolean).join(' · '))}</div></div><a class="btn-link" style="margin-left:auto" href="profile-edit.html" target="_blank">Edit profile</a></div></div>`));
+        USE.hydrateSrc(b);
+      } else {
+        d.guest = d.guest || { name: '', institution: '' };
+        b.appendChild(USE.el(`<div class="field"><div class="label">About you</div><div class="hint" style="margin:0 0 8px">No login needed. Optionally <a href="profile-edit.html?return=${encodeURIComponent('contribute.html' + location.search)}">create a profile</a> so colleagues can find all your work.</div></div>`));
+        const gg = USE.el('<div class="grid-2"></div>');
+        gg.appendChild(F.text(d.guest, 'name', { label: 'Your name', required: true, placeholder: 'e.g. Dr. Asha Rao' }));
+        gg.appendChild(F.text(d.guest, 'institution', { label: 'Institution', required: true, placeholder: 'e.g. St. Joseph’s College, Bengaluru' }));
+        b.appendChild(gg);
+      }
       b.appendChild(F.text(d, 'title', { label: 'Title', required: true, max: 120, placeholder: opts.titlePh || '' }));
       b.appendChild(F.area(d, 'overview', { label: 'Overview', required: true, max: 220, rows: 2, hint: 'One or two sentences. Shown on the card and under the title.' }));
       b.appendChild(F.chips(d, 'disciplines', { label: opts.subjectLabel || 'Discipline(s)', required: true, options: USE.TAX.disciplines }));
@@ -28,7 +37,7 @@
         label: 'Co-contributors (optional)', hint: 'Add colleagues who developed this with you.',
         title: (c, i) => 'Co-contributor ' + (i + 1), add: '+ Add co-contributor', make: () => ({ id: '', name: '' }),
         render(box, c) {
-          const others = USE.store.profiles().filter((p) => p.id !== me.id);
+          const others = USE.store.profiles().filter((p) => !me || p.id !== me.id);
           const g2 = USE.el('<div class="grid-2"></div>');
           g2.appendChild(F.select(c, 'id', { label: 'Existing profile', placeholder: '— not on the repository —', options: others.map((p) => [p.id, p.name]) }));
           g2.appendChild(F.text(c, 'name', { label: 'Or type a name', placeholder: 'Name, Institution' }));
@@ -64,7 +73,7 @@
       title: d.title || 'Untitled', overview: d.overview || '', disciplines: d.disciplines || [], topic: d.topic || '',
       level: d.level || '', language: d.language || '', keywords: d.keywords || [],
       thumbnail: d.thumbFile && d.thumbFile.src ? d.thumbFile.src : '',
-      contributors: [{ id: me.id }, ...(d.co || []).filter((c) => c.id || c.name).map((c) => (c.id ? { id: c.id } : { name: c.name }))],
+      contributors: [me ? { id: me.id } : { name: (d.guest || {}).name || 'Anonymous', institution: (d.guest || {}).institution || '' }, ...(d.co || []).filter((c) => c.id || c.name).map((c) => (c.id ? { id: c.id } : { name: c.name }))],
       licence: USE.TAX.licence
     };
     return Object.assign(base, USE.forms[type].toItem(d));
@@ -78,18 +87,6 @@
     const head = (t, sub) => `<section class="page-hero"><div class="container"><div class="crumbs"><a href="index.html">Home</a> › Contribute</div><h1>${esc(t)}</h1><p class="lede">${esc(sub)}</p></div></section>`;
 
     function draw() {
-      if (USE.role() !== 'teacher') {
-        root.innerHTML = head('Contribute a resource', 'Sharing resources is for faculty members.') +
-          `<div class="container detail"><div class="card card-pad empty"><h2>Switch to the Teacher view to contribute</h2><p>Use the Student / Teacher toggle at the top of the page.</p><button class="btn btn-primary" id="tt">Switch to Teacher</button></div></div>`;
-        USE.qs('#tt').onclick = () => USE.setRole('teacher');
-        return;
-      }
-      if (!USE.store.me()) {
-        root.innerHTML = head('Contribute a resource', 'First, tell others who you are.') +
-          `<div class="container detail"><div class="card card-pad empty"><h2>Create your profile first</h2><p>Your profile is shown on every resource you contribute, so colleagues can find your work and reach you if you allow it. It takes a minute.</p>
-          <a class="btn btn-primary" href="profile-edit.html?return=${encodeURIComponent('contribute.html' + location.search)}">Create profile</a></div></div>`;
-        return;
-      }
       if (!type || !USE.forms[type]) {
         root.innerHTML = head('Contribute a resource', 'Share what works in your classroom with educators across India.') +
           `<div class="container detail"><h2>What would you like to share?</h2><div class="type-cards">${Object.values(USE.TYPES).map((T) =>
@@ -126,6 +123,5 @@
       } else start(form.blank(), 0);
     }
     draw();
-    document.addEventListener('rolechange', () => { if (!USE.qs('.wizard')) draw(); });
   };
 })();

@@ -296,7 +296,8 @@
         <h1>${esc(item.title)}</h1>
         <p class="lede">${esc(item.overview)}</p>
         ${USE.metaLine(item, opts && opts.meta)}
-        <div class="teacher-bar teacher-only" data-teacher-bar></div>
+        <div class="teacher-bar"><span class="teacher-only" data-teacher-bar style="display:contents"></span>
+          <a class="btn btn-ghost btn-sm" href="contribute.html?type=${item.type}">＋ Contribute a ${esc(T.single.toLowerCase())}</a></div>
       </div></section>`;
   };
 
