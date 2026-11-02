@@ -14,13 +14,6 @@
       if (me) {
         b.appendChild(USE.el(`<div class="field"><div class="label">Contributing as</div><div class="me-card">${USE.avatar(me, 'md')}<div><b>${esc(me.name)}</b><div class="small muted">${esc([me.designation, me.institution].filter(Boolean).join(' · '))}</div></div><a class="btn-link" style="margin-left:auto" href="profile-edit.html" target="_blank">Edit profile</a></div></div>`));
         USE.hydrateSrc(b);
-      } else {
-        d.guest = d.guest || { name: '', institution: '' };
-        b.appendChild(USE.el(`<div class="field"><div class="label">About you</div><div class="hint" style="margin:0 0 8px">No login needed. Optionally <a href="profile-edit.html?return=${encodeURIComponent('contribute.html' + location.search)}">create a profile</a> so colleagues can find all your work.</div></div>`));
-        const gg = USE.el('<div class="grid-2"></div>');
-        gg.appendChild(F.text(d.guest, 'name', { label: 'Your name', required: true, placeholder: 'e.g. Dr. Asha Rao' }));
-        gg.appendChild(F.text(d.guest, 'institution', { label: 'Institution', required: true, placeholder: 'e.g. St. Joseph’s College, Bengaluru' }));
-        b.appendChild(gg);
       }
       b.appendChild(F.text(d, 'title', { label: 'Title', required: true, max: 120, placeholder: opts.titlePh || '' }));
       b.appendChild(F.area(d, 'overview', { label: 'Overview', required: true, max: 220, rows: 2, hint: 'One or two sentences. Shown on the card and under the title.' }));
@@ -73,7 +66,7 @@
       title: d.title || 'Untitled', overview: d.overview || '', disciplines: d.disciplines || [], topic: d.topic || '',
       level: d.level || '', language: d.language || '', keywords: d.keywords || [],
       thumbnail: d.thumbFile && d.thumbFile.src ? d.thumbFile.src : '',
-      contributors: [me ? { id: me.id } : { name: (d.guest || {}).name || 'Anonymous', institution: (d.guest || {}).institution || '' }, ...(d.co || []).filter((c) => c.id || c.name).map((c) => (c.id ? { id: c.id } : { name: c.name }))],
+      contributors: [me ? { id: me.id } : { name: 'Guest contributor' }, ...(d.co || []).filter((c) => c.id || c.name).map((c) => (c.id ? { id: c.id } : { name: c.name }))],
       licence: USE.TAX.licence
     };
     return Object.assign(base, USE.forms[type].toItem(d));
@@ -104,7 +97,6 @@
           finalCheck(d) {
             const basics = form.steps().findIndex((s) => s.title === 'Basics');
             if (!d.title || !(d.title || '').trim()) return { step: basics, msg: 'Add a title before submitting.' };
-            if (!USE.store.me() && !((d.guest || {}).name || '').trim()) return { step: basics, msg: 'Add your name before submitting.' };
             return null;
           },
           onSubmit(d) {
