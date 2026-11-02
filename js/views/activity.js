@@ -55,12 +55,9 @@
         ${USE.hero(item)}
         <div class="container detail">
           ${item.note ? `<div class="callout note" style="margin-bottom:20px"><p>${esc(item.note)}</p></div>` : ''}
-          <div class="cols">
+          <div class="cols stretch">
             <div data-share="media"><div data-slides></div></div>
-            <div class="stack">
-              <section class="card card-pad" data-share="abstract">${USE.sectionTitle('📄', 'Abstract')}<div class="prose">${USE.prose(item.abstract)}</div></section>
-              ${USE.contributorCard(item)}
-            </div>
+            <section class="card card-pad" data-share="abstract">${USE.sectionTitle('📄', 'Abstract')}<div class="prose">${USE.prose(item.abstract)}</div></section>
           </div>
           <div class="stack section">
             ${item.theory ? `<section class="card card-pad" data-share="theory">${USE.sectionTitle('📐', 'Brief Theory')}<div class="prose">${USE.prose(item.theory)}</div></section>` : ''}
@@ -68,6 +65,7 @@
             ${(item.guidelines || []).length ? `<section class="card card-pad" data-share="guidelines" data-student="off">${USE.sectionTitle('🧭', 'Guidelines for Classroom Use')}${USE.blocks(item.guidelines)}</section>` : ''}
             <section class="card card-pad" data-share="resources">${USE.sectionTitle('📎', 'Additional Resources')}${USE.resourceList(item.resources, 'res')}</section>
           </div>
+          ${USE.contributorCard(item)}
         </div>`;
       USE.slideshow(item.media, USE.qs('[data-slides]', root));
       return {};

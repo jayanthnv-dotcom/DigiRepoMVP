@@ -301,18 +301,19 @@
       </div></section>`;
   };
 
+  // Full-width "Contributed by" bar, placed at the end of every resource page.
   USE.contributorCard = (item) => {
     const cs = item.contributors || [];
     if (!cs.length) return '';
-    return `<div class="card">
-      <div style="padding:14px 18px 0" class="eyebrow">Contributed by</div>
-      ${cs.map((c) => {
+    return `<section class="card contrib-bar">
+      <div class="eyebrow">Contributed by</div>
+      <div class="people">${cs.map((c) => {
         const p = c.id ? USE.store.profile(c.id) : null;
         if (!p) return `<div class="contributor"><span class="avatar md">${esc(USE.initials(c.name))}</span><div><div class="name">${esc(c.name)}</div><div class="sub">${esc(c.institution || '')}</div></div></div>`;
         return `<a class="contributor" href="profile.html?id=${esc(p.id)}">${USE.avatar(p, 'md')}<div><div class="name">${esc(p.name)}</div><div class="sub">${esc([p.designation, p.institution].filter(Boolean).join(' · '))}</div></div></a>`;
-      }).join('')}
-      <div style="padding:0 18px 14px" class="licence">Shared under ${esc(item.licence || USE.TAX.licence)}${item.created ? ' · Added ' + esc(USE.fmtDate(item.created)) : ''}${item.sample ? ' · Sample content' : ''}</div>
-    </div>`;
+      }).join('')}</div>
+      <div class="licence">Shared under ${esc(item.licence || USE.TAX.licence)}${item.created ? ' · Added ' + esc(USE.fmtDate(item.created)) : ''}${item.sample ? ' · Sample content' : ''}</div>
+    </section>`;
   };
 
   USE.kindOf = (r) => {

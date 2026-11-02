@@ -40,9 +40,9 @@
       root.innerHTML = `
         ${USE.hero(item)}
         <div class="container detail">
-          <div class="cols">
+          <div class="cols stretch">
             <div class="stack">
-              <section class="card" data-share="protocol">
+              <section class="card fill" data-share="protocol">
                 <div class="panel-head">
                   <div><div class="eyebrow">🔬 Dynamic Lab Protocol</div><div class="small muted" data-method-hint>Choose a teaching style</div></div>
                   <div class="tabs" role="tablist" data-tabs>${meths.map((k) => `<button role="tab" data-m="${k}">${METHODS[k].label}</button>`).join('')}</div>
@@ -59,22 +59,21 @@
                 <div class="screen" data-screen>Select a step with a video to play it here.</div>
                 <div class="cap" data-vcap></div>
               </section>
+              ${(item.materials || []).length ? `<section class="card card-pad" data-share="materials">
+                ${USE.sectionTitle('🧾', 'Materials Required')}
+                <table class="mat-table"><thead><tr><th>Material</th><th>Per student</th></tr></thead><tbody>
+                ${item.materials.map((m) => `<tr><td>${esc(m.name)}</td><td>${esc(fmtQty(m.qty, m.unit))}</td></tr>`).join('')}</tbody></table>
+              </section>` : ''}
               ${hasCalc ? `<section class="card card-pad calc" data-share="calc" data-student="off">
                 ${USE.sectionTitle('⚖️', 'Materials Calculator')}
                 <div class="row"><label for="cls">Number of students</label><input id="cls" class="input" type="number" min="1" value="30">
                   <label class="switch small"><input type="checkbox" id="extra"><span class="track"></span><span>+10% extra</span></label></div>
                 <table><thead><tr><th>Material</th><th>Per student</th><th>Total</th></tr></thead><tbody data-calc></tbody></table>
               </section>` : ''}
-              ${USE.contributorCard(item)}
             </div>
           </div>
 
-          <div class="trio section">
-            ${(item.materials || []).length ? `<section class="card card-pad" data-share="materials">
-              ${USE.sectionTitle('🧾', 'Materials Required')}
-              <table class="mat-table"><thead><tr><th>Material</th><th>Per student</th></tr></thead><tbody>
-              ${item.materials.map((m) => `<tr><td>${esc(m.name)}</td><td>${esc(fmtQty(m.qty, m.unit))}</td></tr>`).join('')}</tbody></table>
-            </section>` : ''}
+          <div class="cols even section">
             <section class="card card-pad" data-share="resources">
               ${USE.sectionTitle('📥', 'Resources')}
               ${USE.resourceList(item.resources, 'res')}
@@ -89,6 +88,7 @@
             ${questions(item.prelab, 'prelab', 'Pre-Lab Questions', '📋')}
             ${questions(item.postlab, 'postlab', 'Post-Lab Inquiry Questions', '❓')}
           </div>
+          ${USE.contributorCard(item)}
         </div>`;
 
       const tabs = USE.qs('[data-tabs]', root);

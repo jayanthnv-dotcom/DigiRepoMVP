@@ -13,7 +13,7 @@
         ${USE.hero(item, { label: isModule ? 'Module' : 'Course', meta })}
         <div class="container detail">
           ${item.note ? `<div class="callout note" style="margin-bottom:20px"><p>${esc(item.note)}</p></div>` : ''}
-          <div class="cols even">
+          <div class="cols even stretch">
             <section class="card card-pad" data-share="abstract">${USE.sectionTitle('📄', 'Abstract')}<div class="prose">${USE.prose(item.abstract)}</div></section>
             <section class="card card-pad" data-share="outcomes">${USE.sectionTitle('🎯', 'Learning Outcomes')}
               <p class="small muted">By the end of this ${isModule ? 'module' : 'course'}, students will be able to:</p>
@@ -33,10 +33,8 @@
                 </div>
               </div>`).join('')}
           </section>
-          <div class="cols">
-            <div class="callout info"><h4>Adapting this ${isModule ? 'module' : 'course'}</h4><p>Reuse and adapt this ${isModule ? 'module' : 'course'} for your institution under ${esc(item.licence || USE.TAX.licence)}: credit the contributors and share your adaptation under the same licence. Contact the contributor through their profile to learn more.</p></div>
-            ${USE.contributorCard(item)}
-          </div>
+          <div class="callout info"><h4>Adapting this ${isModule ? 'module' : 'course'}</h4><p>Reuse and adapt this ${isModule ? 'module' : 'course'} for your institution under ${esc(item.licence || USE.TAX.licence)}: credit the contributors and share your adaptation under the same licence. Contact the contributor through their profile to learn more.</p></div>
+          ${USE.contributorCard(item)}
         </div>`;
       USE.qsa('.acc > button', root).forEach((b) => (b.onclick = () => {
         const a = b.parentElement; a.classList.toggle('open'); b.setAttribute('aria-expanded', String(a.classList.contains('open')));

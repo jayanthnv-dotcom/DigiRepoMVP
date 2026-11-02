@@ -207,7 +207,14 @@ textarea.input { min-height: 96px; resize: vertical; }
 .stack > * + * { margin-top: 24px; }
 .trio { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
 
-.contributor { display: flex; gap: 14px; align-items: center; padding: 16px 18px; color: inherit; text-decoration: none !important; }
+.contrib-bar { display: flex; align-items: center; gap: 12px 28px; flex-wrap: wrap; padding: 16px 22px; margin-top: 28px; }
+.contrib-bar .people { display: flex; flex-wrap: wrap; gap: 8px 28px; flex: 1; }
+.contrib-bar .licence { width: 100%; padding-top: 10px; border-top: 1px solid var(--border); }
+.contributor { display: flex; gap: 12px; align-items: center; color: inherit; text-decoration: none !important; }
+.cols.stretch { align-items: stretch; }
+.cols.stretch > * { height: 100%; }
+.stack > .fill:only-child, .stack > .fill { height: 100%; }
+.stack:has(> .fill) { display: flex; flex-direction: column; }
 .contributor:hover .name { color: var(--orange); }
 .contributor .name { font-weight: 600; color: var(--navy); }
 .contributor .sub { font-size: .82rem; color: var(--muted); }
@@ -289,7 +296,7 @@ textarea.input { min-height: 96px; resize: vertical; }
 .thumbs button[aria-current="true"] { border-color: var(--orange); }
 
 /* Module cards (worksheets) */
-.mod-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+.mod-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
 .mod-card { padding: 20px 22px; display: flex; flex-direction: column; }
 .mod-card .eyebrow { margin-bottom: 4px; }
 .mod-card h3 { margin-bottom: 4px; }
@@ -457,3 +464,7 @@ body.sharing .site-footer { padding-bottom: 80px; }
   .site-header, .site-footer, .share-bar, .teacher-bar, .student-banner { display: none !important; }
 }
 section[id], .field { scroll-margin-top: 84px; }
+/* Two-column rows collapse to one full-width column when a side is empty or hidden for students. */
+.cols.even > :only-child { grid-column: 1 / -1; }
+.cols.even:has(> .share-hidden) { grid-template-columns: 1fr; }
+.list-head .section-title { margin-bottom: 0; }
