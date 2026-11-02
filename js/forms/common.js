@@ -101,6 +101,12 @@
       const start = (data, step) => {
         USE.Wizard({
           root: USE.qs('[data-w]'), steps: form.steps(), data, draftKey: key, startStep: step,
+          finalCheck(d) {
+            const basics = form.steps().findIndex((s) => s.title === 'Basics');
+            if (!d.title || !(d.title || '').trim()) return { step: basics, msg: 'Add a title before submitting.' };
+            if (!USE.store.me() && !((d.guest || {}).name || '').trim()) return { step: basics, msg: 'Add your name before submitting.' };
+            return null;
+          },
           onSubmit(d) {
             const item = USE.buildItem(type, d);
             if (!USE.store.save(item)) return;
@@ -113,13 +119,10 @@
         });
       };
       if (draft && draft.data) {
-        USE.modal(`<h3>Continue your draft?</h3><p class="muted">You have an unfinished ${esc(T.single.toLowerCase())} draft${draft.data.title ? ': <b>' + esc(draft.data.title) + '</b>' : ''}, saved ${esc(USE.fmtDate(draft.at))}.</p>
-          <div class="actions"><button class="btn btn-ghost" data-new>Start over</button><button class="btn btn-primary" data-cont>Continue draft</button></div>`,
-        (m, close) => {
-          m.querySelector('[data-cont]').onclick = () => { close(); start(draft.data, draft.step || 0); };
-          m.querySelector('[data-new]').onclick = () => { USE.LS.del(key); close(); start(form.blank(), 0); };
-        });
-        start(draft.data, draft.step || 0);
+        start(draft.data, 0);
+        const note = USE.el('<div class="container"><div class="callout note" style="margin-top:20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span>Your saved draft has been restored.</span><button class="btn-link" type="button">Start a fresh form</button></div></div>');
+        note.querySelector('button').onclick = () => { USE.LS.del(key); note.remove(); start(form.blank(), 0); };
+        USE.qs('[data-w]').before(note);
       } else start(form.blank(), 0);
     }
     draw();

@@ -283,17 +283,15 @@
 
     $('[data-back]').onclick = () => go(cur - 1);
     $('[data-draft]').onclick = () => save(false);
+    // Steps can be browsed freely; required fields are only checked when submitting.
     $('[data-next]').onclick = () => {
-      if (!validate()) return;
       done.add(cur);
-      if (cur === steps.length - 1) { opts.onSubmit(data); if (opts.draftKey) USE.LS.del(opts.draftKey); }
-      else { save(true); go(cur + 1); }
+      if (cur < steps.length - 1) { save(true); go(cur + 1); return; }
+      const miss = opts.finalCheck ? opts.finalCheck(data) : null;
+      if (miss) { go(miss.step); setTimeout(() => { validate(); USE.toast(miss.msg); }, 50); return; }
+      opts.onSubmit(data); if (opts.draftKey) USE.LS.del(opts.draftKey);
     };
-    USE.qsa('.wz-steps button', root).forEach((b) => (b.onclick = () => {
-      const i = +b.dataset.i;
-      if (i <= cur || [...Array(i).keys()].every((j) => done.has(j))) go(i);
-      else USE.toast('Complete the current step first.');
-    }));
+    USE.qsa('.wz-steps button', root).forEach((b) => (b.onclick = () => go(+b.dataset.i)));
     if (opts.startStep) { for (let j = 0; j < opts.startStep; j++) done.add(j); }
     go(opts.startStep || 0);
     return { go };
