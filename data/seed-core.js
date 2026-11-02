@@ -9,7 +9,7 @@ window.USE_SEED.profiles.push(
     disciplines: ['Chemistry', 'Physics', 'Biology', 'Mathematics'],
     bio: 'Curators of the USE Network digital repository. This profile holds sample resources used to demonstrate the prototype.',
     interests: 'Low-cost laboratory work, active learning, open educational resources',
-    email: 'jayanth.nv@apu.edu.in', showEmail: true, phone: '', showPhone: false, sample: true
+    email: 'usenetwork@apu.edu.in', showEmail: true, phone: '', showPhone: false, sample: true
   },
   {
     id: 'p-shantha', name: 'Shantha Bhushan', designation: 'Faculty, Mathematics',

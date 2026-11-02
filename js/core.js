@@ -220,7 +220,7 @@
         <div><div class="fname">USE Network · Digital Repository</div>
           <div>Undergraduate Science Educators' Network, Azim Premji University, Bengaluru</div>
           <div style="margin-top:6px">Open educational resources shared under ${USE.TAX.licence} unless stated otherwise.</div></div>
-        <div><div>Contact: <a href="mailto:jayanth.nv@apu.edu.in">jayanth.nv@apu.edu.in</a></div>
+        <div><div>Contact: <a href="mailto:usenetwork@apu.edu.in">usenetwork@apu.edu.in</a></div>
           <div style="margin-top:6px">Prototype v1 · sample content for demonstration</div></div>
       </div></footer>`));
     applyRole();
