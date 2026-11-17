@@ -40,9 +40,9 @@
       root.innerHTML = `
         ${USE.hero(item)}
         <div class="container detail">
-          <div class="cols stretch">
+          <div class="cols">
             <div class="stack">
-              <section class="card fill" data-share="protocol">
+              <section class="card" data-share="protocol">
                 <div class="panel-head">
                   <div><div class="eyebrow">🔬 Dynamic Lab Protocol</div><div class="small muted" data-method-hint>Choose a teaching style</div></div>
                   <div class="tabs" role="tablist" data-tabs>${meths.map((k) => `<button role="tab" data-m="${k}">${METHODS[k].label}</button>`).join('')}</div>
@@ -51,6 +51,10 @@
                   <div data-protocol></div>
                   ${item.safety ? `<div class="callout warn" data-share="safety" style="margin-top:18px"><h4>⚠️ Safety protocol</h4>${USE.prose(item.safety)}</div>` : ''}
                 </div>
+              </section>
+              <section class="card card-pad" data-share="resources">
+                ${USE.sectionTitle('📥', 'Resources')}
+                ${USE.resourceList(item.resources, 'res')}
               </section>
             </div>
             <div class="stack">
@@ -70,21 +74,14 @@
                   <label class="switch small"><input type="checkbox" id="extra"><span class="track"></span><span>+10% extra</span></label></div>
                 <table><thead><tr><th>Material</th><th>Per student</th><th>Total</th></tr></thead><tbody data-calc></tbody></table>
               </section>` : ''}
+              ${item.misconception ? `<section class="card card-pad" data-share="misconception" data-student="off">
+                ${USE.sectionTitle('💡', 'Misconception Alert')}
+                <div class="prose">${USE.prose(item.misconception)}</div>
+              </section>` : ''}
             </div>
           </div>
 
-          <div class="cols even section">
-            <section class="card card-pad" data-share="resources">
-              ${USE.sectionTitle('📥', 'Resources')}
-              ${USE.resourceList(item.resources, 'res')}
-            </section>
-            ${item.misconception ? `<section class="card card-pad" data-share="misconception" data-student="off">
-              ${USE.sectionTitle('💡', 'Misconception Alert')}
-              <div class="prose">${USE.prose(item.misconception)}</div>
-            </section>` : ''}
-          </div>
-
-          <div class="stack">
+          <div class="stack section">
             ${questions(item.prelab, 'prelab', 'Pre-Lab Questions', '📋')}
             ${questions(item.postlab, 'postlab', 'Post-Lab Inquiry Questions', '❓')}
           </div>
