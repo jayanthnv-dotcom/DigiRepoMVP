@@ -52,6 +52,10 @@
                   ${item.safety ? `<div class="callout warn" data-share="safety" style="margin-top:18px"><h4>⚠️ Safety protocol</h4>${USE.prose(item.safety)}</div>` : ''}
                 </div>
               </section>
+              ${item.misconception ? `<section class="card card-pad" data-share="misconception" data-student="off">
+                ${USE.sectionTitle('💡', 'Misconception Alert')}
+                <div class="prose">${USE.prose(item.misconception)}</div>
+              </section>` : ''}
               <section class="card card-pad" data-share="resources">
                 ${USE.sectionTitle('📥', 'Resources')}
                 ${USE.resourceList(item.resources, 'res')}
@@ -73,10 +77,6 @@
                 <div class="row"><label for="cls">Number of students</label><input id="cls" class="input" type="number" min="1" value="30">
                   <label class="switch small"><input type="checkbox" id="extra"><span class="track"></span><span>+10% extra</span></label></div>
                 <table><thead><tr><th>Material</th><th>Per student</th><th>Total</th></tr></thead><tbody data-calc></tbody></table>
-              </section>` : ''}
-              ${item.misconception ? `<section class="card card-pad" data-share="misconception" data-student="off">
-                ${USE.sectionTitle('💡', 'Misconception Alert')}
-                <div class="prose">${USE.prose(item.misconception)}</div>
               </section>` : ''}
             </div>
           </div>
