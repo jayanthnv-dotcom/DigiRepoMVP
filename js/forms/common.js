@@ -42,7 +42,7 @@
 
   USE.reviewStep = (type) => ({
     title: 'Review & submit',
-    intro: 'This is how your resource will look. Use Back to change anything. Use the Student/Teacher toggle at the top to check both views.',
+    intro: 'This is how your resource will look. Use Back to change anything.',
     render(b, d) {
       const item = USE.buildItem(type, d);
       const frame = USE.el(`<div class="review-frame"><div class="rf-bar"><span>Preview</span><span>Licence: ${esc(USE.TAX.licence)}</span></div><div data-pv></div></div>`);

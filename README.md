@@ -19,7 +19,7 @@ This is an interactive prototype to show the idea to the team. It is a static we
 | **My student links** (`my-links.html`) | Links teachers created with “Share with students” |
 
 ### Student and Teacher views
-There is no login yet. Use the **Student / Teacher** toggle in the header.
+There is no login yet. On Lab Experiments pages, use the **Student / Teacher** toggle in the header. Other pages show everything.
 
 - **Teacher view** shows everything, the Contribute buttons and **Share with students**.
 - **Student view** hides teacher-only sections by default: answer keys, Materials Calculator, misconception alerts, pedagogy and guidelines, and files marked *Faculty only*.

@@ -170,7 +170,9 @@
   };
 
   /* ---------- Role (Student / Teacher) ---------- */
-  USE.role = () => LS.get('role', 'teacher');
+  // The Student / Teacher switch is only used on Lab Experiments pages; elsewhere everything is shown.
+  USE.roleSwitch = false;
+  USE.role = () => (USE.roleSwitch ? LS.get('role', 'teacher') : 'teacher');
   USE.setRole = (r) => { LS.set('role', r); applyRole(); document.dispatchEvent(new CustomEvent('rolechange', { detail: r })); };
   function applyRole() {
     document.body.classList.toggle('role-teacher', USE.role() === 'teacher');
@@ -188,6 +190,7 @@
   };
 
   USE.layout = (active) => {
+    USE.roleSwitch = active === 'lab';
     const nav = [
       ['index.html', 'Home', 'home'],
       ['labs.html', 'Lab Experiments', 'lab'],
@@ -201,7 +204,7 @@
         <button class="nav-toggle" aria-label="Menu" aria-expanded="false">☰</button>
         <nav class="main-nav" aria-label="Main">${nav.map(([h, t, k]) => `<a href="${h}" class="${k === active ? 'active' : ''}">${t}</a>`).join('')}</nav>
         <div class="header-tools">
-          <div class="role-toggle" role="group" aria-label="View as">
+          <div class="role-toggle${USE.roleSwitch ? '' : ' hidden'}" role="group" aria-label="View as">
             <button data-role="student">Student</button><button data-role="teacher">Teacher</button>
           </div>
           <div class="profile-menu teacher-only"></div>

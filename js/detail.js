@@ -12,6 +12,6 @@
     const view = USE.views[type];
     const ctx = view.render(item, root) || {};
     USE.hydrateSrc(root);
-    USE.share.init(Object.assign({ item }, ctx.share || {}));
+    if (type === 'lab') USE.share.init(Object.assign({ item }, ctx.share || {}));
   };
 })();
